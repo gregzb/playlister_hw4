@@ -10,13 +10,18 @@ export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
     LOGIN_USER: "LOGIN_USER",
     LOGOUT_USER: "LOGOUT_USER",
-    REGISTER_USER: "REGISTER_USER"
+    REGISTER_USER: "REGISTER_USER",
+    ACCOUNT_ERROR: "ACCOUNT_ERROR"
 }
 
 function AuthContextProvider(props) {
     const [auth, setAuth] = useState({
         user: null,
-        loggedIn: false
+        loggedIn: false,
+        accountError: {
+            error: false,
+            message: "",
+        }
     });
     const history = useHistory();
 
@@ -30,25 +35,50 @@ function AuthContextProvider(props) {
             case AuthActionType.GET_LOGGED_IN: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: payload.loggedIn
+                    loggedIn: payload.loggedIn,
+                    accountError: {
+                        error: false,
+                        message: "",
+                    }
                 });
             }
             case AuthActionType.LOGIN_USER: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
+                    loggedIn: true,
+                    accountError: {
+                        error: false,
+                        message: "",
+                    }
                 })
             }
             case AuthActionType.LOGOUT_USER: {
                 return setAuth({
                     user: null,
-                    loggedIn: false
+                    loggedIn: false,
+                    accountError: {
+                        error: false,
+                        message: "",
+                    }
                 })
             }
             case AuthActionType.REGISTER_USER: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
+                    loggedIn: true,
+                    accountError: {
+                        error: false,
+                        message: "",
+                    }
+                })
+            }
+            case AuthActionType.ACCOUNT_ERROR: {
+                return setAuth({
+                    user: null,
+                    loggedIn: false,
+                    accountError: {
+                        ...payload
+                    }
                 })
             }
             default:
@@ -114,6 +144,16 @@ function AuthContextProvider(props) {
         }
         console.log("user initials: " + initials);
         return initials;
+    }
+
+    auth.setAccountError = function(errState, errMsg) {
+        authReducer( {
+            type: AuthActionType.ACCOUNT_ERROR,
+            payload: {
+                error: errState,
+                message: errMsg
+            }
+        });
     }
 
     return (
