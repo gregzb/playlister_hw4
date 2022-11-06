@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import SongCard from './SongCard.js'
 import MUIEditSongModal from './MUIEditSongModal'
@@ -12,9 +12,26 @@ import { GlobalStoreContext } from '../store/index.js'
     
     @author McKilla Gorilla
 */
+
 function WorkspaceScreen() {
     const { store } = useContext(GlobalStoreContext);
     store.history = useHistory();
+
+    const keyDownFunc = (event) => {
+        if (store.currentModal !== "NONE") return;
+        if (event.ctrlKey) {
+              if (event.key === "z") {
+                  store.undo();
+              } else if (event.key === "y") {
+                  store.redo();
+              }
+          }
+    };
+
+    useEffect(() => {
+        document.removeEventListener('keydown', keyDownFunc);
+        document.addEventListener('keydown', keyDownFunc);
+    }, []);
 
     if (!store.currentList) {
         store.history.push("/");
@@ -30,7 +47,7 @@ function WorkspaceScreen() {
     }
     return (
         <Box>
-        <List 
+        <List
             id="playlist-cards" 
             sx={{ width: '100%', bgcolor: 'background.paper' }}
         >
