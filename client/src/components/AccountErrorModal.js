@@ -1,8 +1,9 @@
 import { useContext } from 'react'
-import GlobalStoreContext from '../store';
-import * as React from 'react';
+import AuthContext from '../auth'
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
 
 const style = {
     position: 'absolute',
@@ -17,37 +18,19 @@ const style = {
 };
 
 export default function AccountErrorModal() {
-    const { store } = useContext(GlobalStoreContext);
-    const name = store.listMarkedForDeletion ? store.listMarkedForDeletion.name : "";
-    function handleDeleteList(event) {
-        store.deleteMarkedList();
-    }
+    const { auth } = useContext(AuthContext);
+    const errMsg = auth.accountError.message;
     function handleCloseModal(event) {
-        store.unmarkListForDeletion();
+        auth.setAccountError(false, "");
     }
 
     return (
         <Modal
-            open={store.listMarkedForDeletion !== null}
+            open={auth.accountError.error}
         >
             <Box sx={style}>
-                <div className="modal-dialog">
-                <header className="dialog-header">
-                    Delete the {name} Top 5 List?
-                </header>
-                <div id="confirm-cancel-container">
-                    <button
-                        id="dialog-yes-button"
-                        className="modal-button"
-                        onClick={handleDeleteList}
-                    >Confirm</button>
-                    <button
-                        id="dialog-no-button"
-                        className="modal-button"
-                        onClick={handleCloseModal}
-                    >Cancel</button>
-                </div>
-            </div>
+            <Alert severity="error">{errMsg}</Alert>
+            <Button onClick={handleCloseModal} variant="contained">Close</Button>
             </Box>
         </Modal>
     );

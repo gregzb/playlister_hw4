@@ -122,6 +122,9 @@ function AuthContextProvider(props) {
                 }
             })
             history.push("/");
+        } else {
+            const errMsg = response.data.errorMessage;
+            auth.setAccountError(true, errMsg);
         }
     }
 
