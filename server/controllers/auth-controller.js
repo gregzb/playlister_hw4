@@ -7,6 +7,7 @@ getLoggedIn = async (req, res) => {
         let userId = auth.verifyUser(req);
         if (!userId) {
             return res.status(200).json({
+                success: false,
                 loggedIn: false,
                 user: null,
                 errorMessage: "?"
@@ -17,6 +18,7 @@ getLoggedIn = async (req, res) => {
         console.log("loggedInUser: " + loggedInUser);
 
         return res.status(200).json({
+            success: false,
             loggedIn: true,
             user: {
                 firstName: loggedInUser.firstName,
@@ -26,7 +28,10 @@ getLoggedIn = async (req, res) => {
         })
     } catch (err) {
         console.log("err: " + err);
-        res.json(false);
+        res.json({
+            success: false,
+            errorMessage: err
+        });
     }
 }
 
@@ -38,7 +43,7 @@ loginUser = async (req, res) => {
         if (!email || !password) {
             return res
                 .status(400)
-                .json({ errorMessage: "Please enter all required fields." });
+                .json({ success: false, errorMessage: "Please enter all required fields." });
         }
 
         const existingUser = await User.findOne({ email: email });
@@ -47,6 +52,7 @@ loginUser = async (req, res) => {
             return res
                 .status(401)
                 .json({
+                    success: false,
                     errorMessage: "Wrong email or password provided."
                 })
         }
@@ -58,6 +64,7 @@ loginUser = async (req, res) => {
             return res
                 .status(401)
                 .json({
+                    success: false,
                     errorMessage: "Wrong email or password provided."
                 })
         }
@@ -101,13 +108,14 @@ registerUser = async (req, res) => {
         if (!firstName || !lastName || !email || !password || !passwordVerify) {
             return res
                 .status(400)
-                .json({ errorMessage: "Please enter all required fields." });
+                .json({ success: false, errorMessage: "Please enter all required fields." });
         }
         console.log("all fields provided");
         if (password.length < 8) {
             return res
                 .status(400)
                 .json({
+                    success: false,
                     errorMessage: "Please enter a password of at least 8 characters."
                 });
         }
@@ -116,6 +124,7 @@ registerUser = async (req, res) => {
             return res
                 .status(400)
                 .json({
+                    success: false,
                     errorMessage: "Please enter the same password twice."
                 })
         }
@@ -163,7 +172,9 @@ registerUser = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).send();
+        res.status(500).send({
+            success: false
+        });
     }
 }
 
