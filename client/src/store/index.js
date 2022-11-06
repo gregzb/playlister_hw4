@@ -237,7 +237,8 @@ function GlobalStoreContextProvider(props) {
                                     type: GlobalStoreActionType.CHANGE_LIST_NAME,
                                     payload: {
                                         idNamePairs: pairsArray,
-                                        playlist: playlist
+                                        // playlist: playlist
+                                        playlist: null
                                     }
                                 });
                             }
@@ -257,6 +258,7 @@ function GlobalStoreContextProvider(props) {
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
         });
+        history.push("/");
         tps.clearAllTransactions();
     }
 
@@ -317,6 +319,11 @@ function GlobalStoreContextProvider(props) {
         }
         getListToDelete(id);
     }
+
+    store.unmarkListForDeletion = function () {
+        store.loadIdNamePairs();
+    }
+
     store.deleteList = function (id) {
         async function processDelete(id) {
             let response = await api.deletePlaylistById(id);
