@@ -2,7 +2,13 @@ import { useContext } from 'react'
 import GlobalStoreContext from '../store';
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import Modal from '@mui/material/Modal';
+import Input from '@mui/material/Input';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 
 const style = {
     position: 'absolute',
@@ -41,7 +47,42 @@ export default function MUIRemoveSongModal() {
             open={store.currentModal === "REMOVE_SONG"}
         >
             <Box sx={style}>
-            <div
+            <Grid container spacing={1}>
+            <Grid item xs={12}>
+            <Typography                        
+                        variant="h4"
+                        noWrap
+                        component="div"
+                        sx={{ display: { xs: 'block', sm: 'block' } }}                        
+                    >
+                        Remove {songTitle}?
+                        </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                <Typography                        
+                        variant="body1"
+                        component="div"
+                        sx={{ display: { xs: 'block', sm: 'block' } }}                        
+                    >
+                        Are you sure you wish to permanently remove <span style={{fontWeight: "bold"}}>{songTitle}</span> from the playlist?
+                        </Typography>
+                </Grid>
+                
+                <Grid item xs={12}>
+                <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                    <Button onClick={handleConfirmRemoveSong}>Confirm</Button>
+                    <Button onClick={handleCancelRemoveSong}>Cancel</Button>
+                </ButtonGroup>
+                {/* <Input type="button" value="Confirm" onClick={handleConfirmEditSong}/> */}
+                </Grid>
+                {/* <Grid item xs={6}>
+                <Input type="button" value="Cancel" onClick={handleCancelEditSong}/>
+                </Grid> */}
+            </Grid>
+            {/* <div
         id="remove-song-modal"
         className={modalClass}
         data-animation="slideInOutLeft">
@@ -68,7 +109,7 @@ export default function MUIRemoveSongModal() {
                     value='Cancel' />
             </div>
         </div>
-    </div>
+    </div> */}
             </Box>
         </Modal>
     );
