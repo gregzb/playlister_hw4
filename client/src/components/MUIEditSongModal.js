@@ -2,7 +2,13 @@ import { useContext, useState } from 'react'
 import GlobalStoreContext from '../store';
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import Modal from '@mui/material/Modal';
+import Input from '@mui/material/Input';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 
 const style = {
     position: 'absolute',
@@ -49,22 +55,65 @@ export default function MUIEditSongModal() {
 
     return (
         <Modal
-            open={store.listMarkedForDeletion !== null}
+            open={store.currentModal === "EDIT_SONG"}
         >
             <Box sx={style}>
-            <div
+            <Grid container spacing={1}>
+            <Grid item xs={12}>
+            <Typography                        
+                        variant="h4"
+                        noWrap
+                        component="div"
+                        sx={{ display: { xs: 'block', sm: 'block' } }}                        
+                    >
+                        Edit Song
+                        </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                <Divider />
+                </Grid>
+                <Grid item xs={4}>
+                    Title:
+                </Grid>
+                <Grid item xs={8}>
+                <Input type="text" defaultValue={title} onChange={handleUpdateTitle}/>
+                </Grid>
+                <Grid item xs={4}>
+                    Artist:
+                </Grid>
+                <Grid item xs={8}>
+                <Input type="text" defaultValue={artist} onChange={handleUpdateArtist}/>
+                </Grid>
+                <Grid item xs={4}>
+                    YouTube Id:
+                </Grid>
+                <Grid item xs={8}>
+                <Input type="text" defaultValue={youTubeId} onChange={handleUpdateYouTubeId}/>
+                </Grid>
+                
+                <Grid item xs={12}>
+                <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                    <Button onClick={handleConfirmEditSong}>Confirm</Button>
+                    <Button onClick={handleCancelEditSong}>Cancel</Button>
+                </ButtonGroup>
+                {/* <Input type="button" value="Confirm" onClick={handleConfirmEditSong}/> */}
+                </Grid>
+                {/* <Grid item xs={6}>
+                <Input type="button" value="Cancel" onClick={handleCancelEditSong}/>
+                </Grid> */}
+            </Grid>
+            {/* <div
             id="edit-song-modal"
-            className="modal is-visible"
             data-animation="slideInOutLeft">
             <div
                 id='edit-song-root'
-                className="modal-root">
+                >
                 <div
                     id="edit-song-modal-header"
-                    className="modal-north">Edit Song</div>
+                    >Edit Song</div>
                 <div
                     id="edit-song-modal-content"
-                    className="modal-center">
+                    >
                     <div id="title-prompt" className="modal-prompt">Title:</div>
                     <input 
                         id="edit-song-modal-title-textfield" 
@@ -102,7 +151,7 @@ export default function MUIEditSongModal() {
                         onClick={handleCancelEditSong} />
                 </div>
             </div>
-        </div>
+        </div> */}
             </Box>
         </Modal>
     );
