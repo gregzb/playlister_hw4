@@ -96,6 +96,9 @@ function AuthContextProvider(props) {
                     user: response.data.user
                 }
             });
+        } else {
+            const errMsg = response.data.errorMessage;
+            auth.setAccountError(true, errMsg);
         }
     }
 
@@ -109,6 +112,9 @@ function AuthContextProvider(props) {
                 }
             })
             history.push("/");
+        } else {
+            const errMsg = response.data.errorMessage;
+            auth.setAccountError(true, errMsg);
         }
     }
 
@@ -136,6 +142,9 @@ function AuthContextProvider(props) {
                 payload: null
             })
             history.push("/");
+        } else {
+            const errMsg = response.data.errorMessage;
+            auth.setAccountError(true, errMsg);
         }
     }
 
