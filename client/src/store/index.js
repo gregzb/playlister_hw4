@@ -262,6 +262,10 @@ function GlobalStoreContextProvider(props) {
         tps.clearAllTransactions();
     }
 
+    store.clearAllTransactions = function () {
+        tps.clearAllTransactions();
+    }
+
     // THIS FUNCTION CREATES A NEW LIST
     store.createNewList = async function () {
         let newListName = "Untitled" + store.newListCounter;

@@ -36,6 +36,9 @@ const HomeScreen = () => {
                 ))
             }
             </List>;
+        if (store.currentList) {
+            store.clearAllTransactions();
+        }
     }
     return (
         <div id="playlist-selector">

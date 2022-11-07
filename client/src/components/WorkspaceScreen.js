@@ -13,25 +13,26 @@ import { GlobalStoreContext } from '../store/index.js'
     @author McKilla Gorilla
 */
 
+let storeRef = {store: null};
+document.addEventListener('keydown', (event) => {
+    const store = storeRef.store;
+    if (!store || store.currentModal !== "NONE") return;
+    if (event.ctrlKey) {
+          if (event.key === "z") {
+                console.log("undoing");
+              store.undo();
+          } else if (event.key === "y") {
+            console.log("redo");
+              store.redo();
+          }
+      }
+});
+
 function WorkspaceScreen() {
     const { store } = useContext(GlobalStoreContext);
     store.history = useHistory();
 
-    const keyDownFunc = (event) => {
-        if (store.currentModal !== "NONE") return;
-        if (event.ctrlKey) {
-              if (event.key === "z") {
-                  store.undo();
-              } else if (event.key === "y") {
-                  store.redo();
-              }
-          }
-    };
-
-    useEffect(() => {
-        document.removeEventListener('keydown', keyDownFunc);
-        document.addEventListener('keydown', keyDownFunc);
-    }, []);
+    storeRef.store = store;
 
     if (!store.currentList) {
         store.history.push("/");

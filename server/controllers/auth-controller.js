@@ -18,7 +18,7 @@ getLoggedIn = async (req, res) => {
         console.log("loggedInUser: " + loggedInUser);
 
         return res.status(200).json({
-            success: false,
+            success: true,
             loggedIn: true,
             user: {
                 firstName: loggedInUser.firstName,
