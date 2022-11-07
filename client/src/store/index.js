@@ -30,7 +30,8 @@ export const GlobalStoreActionType = {
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     EDIT_SONG: "EDIT_SONG",
     REMOVE_SONG: "REMOVE_SONG",
-    HIDE_MODALS: "HIDE_MODALS"
+    HIDE_MODALS: "HIDE_MODALS",
+    INIT: "INIT"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -209,9 +210,26 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null
                 }));
             }
+            case GlobalStoreActionType.INIT: {
+                return setStore(prev => ({
+                    currentModal : CurrentModal.NONE,
+                    idNamePairs: [],
+                    currentList: null,
+                    currentSongIndex : -1,
+                    currentSong : null,
+                    newListCounter: 0,
+                    listNameActive: false,
+                    listIdMarkedForDeletion: null,
+                    listMarkedForDeletion: null
+                }));
+            }
             default:
                 return store;
         }
+    }
+
+    store.init = () => {
+        storeReducer({type: GlobalStoreActionType.INIT, payload: null});
     }
 
     // THESE ARE THE FUNCTIONS THAT WILL UPDATE OUR STORE AND
@@ -399,10 +417,10 @@ function GlobalStoreContextProvider(props) {
     store.getPlaylistSize = function() {
         return store.currentList.songs.length;
     }
-    store.addNewSong = function() {
-        let index = this.getPlaylistSize();
-        this.addCreateSongTransaction(index, "Untitled", "?", "dQw4w9WgXcQ");
-    }
+    // store.addNewSong = function() {
+    //     let index = this.getPlaylistSize();
+    //     this.addCreateSongTransaction(index, "Untitled", "Unknown", "dQw4w9WgXcQ");
+    // }
     // THIS FUNCTION CREATES A NEW SONG IN THE CURRENT LIST
     // USING THE PROVIDED DATA AND PUTS THIS SONG AT INDEX
     store.createSong = function(index, song) {
@@ -458,7 +476,7 @@ function GlobalStoreContextProvider(props) {
     store.addNewSong = () => {
         let playlistSize = store.getPlaylistSize();
         store.addCreateSongTransaction(
-            playlistSize, "Untitled", "?", "dQw4w9WgXcQ");
+            playlistSize, "Untitled", "Unknown", "dQw4w9WgXcQ");
     }
     // THIS FUNCDTION ADDS A CreateSong_Transaction TO THE TRANSACTION STACK
     store.addCreateSongTransaction = (index, title, artist, youTubeId) => {
