@@ -7,7 +7,7 @@ const User = require('../models/user-model');
     
     @author McKilla Gorilla
 */
-createPlaylist = (req, res) => {
+createPlaylist = async (req, res) => {
     const body = req.body;
     console.log("createPlaylist body: " + JSON.stringify(body));
 
@@ -17,6 +17,15 @@ createPlaylist = (req, res) => {
             error: 'You must provide a Playlist',
         })
     }
+
+    await User.findOne({ _id: req.userId }, (err, user) => {
+        if (err || user.email !== body.ownerEmail) {
+            return res.status(400).json({
+                success: false,
+                error: 'Playlist email must match user email',
+            })
+        }
+    });
 
     const playlist = new Playlist(body);
     console.log("playlist: " + playlist.toString());
@@ -146,16 +155,23 @@ getPlaylistPairs = async (req, res) => {
     }).catch(err => console.log(err))
 }
 getPlaylists = async (req, res) => {
-    await Playlist.find({}, (err, playlists) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
+    await User.findOne({ _id: req.userId }, (err, user) => {
+        console.log("find user with id " + req.userId);
+        async function asyncFindLists(email) {
+            console.log("find all Playlists owned by " + email);
+            await Playlist.find({ ownerEmail: email }, (err, playlists) => {
+                if (err) {
+                    return res.status(400).json({ success: false, error: err })
+                }
+                if (!playlists.length) {
+                    return res
+                        .status(404)
+                        .json({ success: false, error: `Playlists not found` })
+                }
+                return res.status(200).json({ success: true, data: playlists })
+            }).catch(err => console.log(err))
         }
-        if (!playlists.length) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Playlists not found` })
-        }
-        return res.status(200).json({ success: true, data: playlists })
+        asyncFindLists(user.email);
     }).catch(err => console.log(err))
 }
 updatePlaylist = async (req, res) => {
